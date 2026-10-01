@@ -3,58 +3,69 @@ import cors from 'cors'
 import express from 'express'
 import { collectionName, connection } from './dbconfig.js'
 import jwt from 'jsonwebtoken'
-const app  = express()
+import cookieParser from 'cookie-parser'
+const app = express()
 
 
 app.use(express.json())
-app.use(cors());
+app.use(cookieParser())
+app.use(cors({
+    origin: 'https://sturdy-happiness-xrwjvrqp755j36jgx-5173.app.github.dev', // allow requests from this origin
+    credentials: true // allow credentials (cookies) to be sent
+}));
 
 //api route to add task
-app.post("/add-task" , async (req , resp)=>{
+app.post("/add-task", verifyToken ,  async (req, resp) => {
     const db = await connection()
     const collection = await db.collection(collectionName)
     const result = await collection.insertOne(req.body)
-    if(result){
+    if (result) {
         resp.send({
-            message:"New Task Added",
-            success:true,
+            message: "New Task Added",
+            success: true,
             result
         })
-    }else{
+    } else {
         resp.send({
-            message:"Cannot Add Task",
-            success:false,
+            message: "Cannot Add Task",
+            success: false,
         })
     }
-    
+
 })
 
 //api route to see task list 
 
-app.get("/tasks" , async (req , resp)=>{
+app.get("/tasks", verifyToken, async (req, resp) => {
     const db = await connection()
+
+
     const collection = await db.collection(collectionName)
     const result = await collection.find().toArray()
-    if(result){
+    if (result) {
         resp.send({
-            message:"Task-list fetch",
-            success:true,
+            message: "Task-list fetch",
+            success: true,
             result
         })
-    }else{
+    } else {
         resp.send({
-            message:"Cannot fetch Task-list ",
-            success:false,
+            message: "Cannot fetch Task-list ",
+            success: false,
         })
     }
-    
+
 })
 
+
+
+
+
 //update task route
-app.put("/update-task", async (req, resp) => {
+app.put("/update-task", verifyToken, async (req, resp) => {
     const db = await connection()
     const collection = db.collection(collectionName)
-    
+
     const { _id, ...fields } = req.body
 
     const updatedTask = await collection.findOneAndUpdate(
@@ -77,21 +88,21 @@ app.put("/update-task", async (req, resp) => {
     }
 })
 
-app.get("/tasks/:id" , async (req , resp)=>{
+app.get("/tasks/:id", verifyToken, async (req, resp) => {
     const db = await connection()
     const collection = await db.collection(collectionName)
     const id = req.params.id
-    const result = await collection.findOne({_id: new ObjectId(id)})
-    if(result){
+    const result = await collection.findOne({ _id: new ObjectId(id) })
+    if (result) {
         resp.send({
-            message:"Task-list fetch",
-            success:true,
+            message: "Task-list fetch",
+            success: true,
             result
         })
-    }else{
+    } else {
         resp.send({
-            message:"Cannot fetch Task-list ",
-            success:false,
+            message: "Cannot fetch Task-list ",
+            success: false,
         })
     }
 })
@@ -100,7 +111,7 @@ app.get("/tasks/:id" , async (req , resp)=>{
 //route to delete tasks
 
 // DELETE route - removes a task by its MongoDB _id
-app.delete("/delete-task/:id", async (req, resp) => {
+app.delete("/delete-task/:id", verifyToken ,  async (req, resp) => {
     const db = await connection()
     const collection = await db.collection(collectionName)
 
@@ -122,65 +133,77 @@ app.delete("/delete-task/:id", async (req, resp) => {
 })
 
 //api route for sign up
-app.post("/signup"  , async (req , resp)=>{
+app.post("/signup",   async (req, resp) => {
     const userdata = req.body;
-if(userdata.email && userdata.password && userdata.name){
-const db = await connection()
-const collection = await db.collection('usersdata')
-const result = await collection.insertOne(userdata)
-if(result){
-    jwt.sign(userdata , 'google', {expiresIn:"5d"} , (error , token)=>{
-     resp.send({
-        success:true,
-        message:"SignUp Done",
-        token
-     })
-        
-    })
-}
-}else{
-      resp.send({
-        success:false,
-        message:"SignUp not Done",
-     })
-}
-    
+    if (userdata.email && userdata.password && userdata.name) {
+        const db = await connection()
+        const collection = await db.collection('usersdata')
+        const result = await collection.insertOne(userdata)
+        if (result) {
+            jwt.sign(userdata, 'google', { expiresIn: "5d" }, (error, token) => {
+                resp.send({
+                    success: true,
+                    message: "SignUp Done",
+                    token
+                })
+
+            })
+        }
+    } else {
+        resp.send({
+            success: false,
+            message: "SignUp not Done",
+        })
+    }
+
 })
 
 //login api route
-app.post("/login"  , async (req , resp)=>{
+app.post("/login",   async (req, resp) => {
     const userdata = req.body;
-if(userdata.email && userdata.password && userdata.name){
-const db = await connection()
-const collection = await db.collection('usersdata')
-const result = await collection.findOne({email:userdata.email , password:userdata.password})
-if(result){
-    jwt.sign(userdata , 'google', {expiresIn:"5d"} , (error , token)=>{
-     resp.send({
-        success:true,
-        message:"Login Done",
-        token
-     })
-        
-    })
+    if (userdata.email && userdata.password) {
+        const db = await connection()
+        const collection = await db.collection('usersdata')
+        const result = await collection.findOne({ email: userdata.email, password: userdata.password })
+        if (result) {
+            jwt.sign({ email: result.email, name: result.name }, 'google', { expiresIn: "5d" }, (error, token) => {
+                resp.send({
+                    success: true,
+                    message: "Login Done",
+                    token
+                })
 
-}else{
-    resp.send({
-        success:false,
-        message:"User not found",
-     })
-}
+            })
+
+        } else {
+            resp.send({
+                success: false,
+                message: "User not found",
+            })
+        }
 
 
-}else{
-      resp.send({
-        success:false,
-        message:"Login not Done",
-     })
-}
-    
+    } else {
+        resp.send({
+            success: false,
+            message: "Login not Done",
+        })
+    }
+
 })
 
+//function to verify token on each route
+function verifyToken(req, resp, next) {
+    // console.log("verifyToken" , req.cookies);
+    const token = req.cookies?.token;
+    jwt.verify(token, 'google', (error, decoded) => {
+        if(error){
+            return resp.send("Invalid token")
+        }
+        next();
+        // console.log(decoded);
+    })
+}
 
 
 app.listen(8000)

@@ -1,9 +1,16 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Login() {
 
     const [userdata, setUserData] = useState({})
+    const navigate = useNavigate();
+
+useEffect(() => {
+    if (localStorage.getItem('login')) {
+        navigate('/')
+    }
+}, [])
 
     const handlelogin = async (e) => {
         e.preventDefault()          // stops the page reload
@@ -18,7 +25,14 @@ export default function Login() {
 
         result = await result.json()
         console.log(result)
-        document.cookie="token="+result.token
+        if (result.success && result.token) {
+            document.cookie = "token=" + result.token
+            localStorage.setItem('login', userdata.email || userdata.name)
+            window.dispatchEvent(new Event('storage')); // Notify other tabs about the login change
+            navigate('/')
+        } else {
+            alert("Invalid Credentials")
+        }
     }
 
 
@@ -42,7 +56,7 @@ export default function Login() {
                 </div>
 
                 <button onClick = {handlelogin}type="submit" className="signup-btn">Login</button>
-                <Link className = "login"to="/signup">Go to SignUp</Link>
+                <Link className = "login"to="/signup">Dont have an account? Sign up</Link>
             </form>
         </div>
     )

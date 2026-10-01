@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useEffect , useState } from 'react'
 import '../style/signup.css'
-import { Link } from 'react-router-dom'
+import { Link , useNavigate } from 'react-router-dom'
 
 export default function Signup() {
 
     const [userdata, setUserData] = useState({})
+    const navigate = useNavigate();
+
+    useEffect(() => {
+    if (localStorage.getItem('login')) {
+        navigate('/')
+    }
+}, [])
 
     const handleSignup = async (e) => {
         e.preventDefault()          // stops the page reload
@@ -19,7 +26,14 @@ export default function Signup() {
 
         result = await result.json()
         console.log(result)
-        document.cookie="token="+result.token
+        if (result.success && result.token) {
+            document.cookie = "token=" + result.token
+            localStorage.setItem('login', userdata.email || userdata.name)
+            window.dispatchEvent(new Event('storage'))
+            navigate('/')
+        } else {
+            alert("Invalid Credentials")
+        }
     }
 
     return (

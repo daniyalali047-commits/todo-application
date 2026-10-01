@@ -10,7 +10,9 @@ export default function List() {
     }, [])
 
     const getListData = async () => {
-        let datalist = await fetch('/tasks')
+        let datalist = await fetch('/tasks' , {
+            credentials: 'include', // include cookies in the request
+        })
         datalist = await datalist.json()
 
         if (datalist.success) {
