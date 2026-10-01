@@ -1,0 +1,25 @@
+body{
+    margin: 0;
+    font-family: arial;
+}
+body {
+    margin: 0;
+    background-color: #121212;
+}
+
+/* Keyframes for page entrance: starts invisible and slightly lower, ends fully visible in place */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Any element with this class plays the animation once each time it mounts (i.e. when the route changes) */
+.page-transition {
+  animation: pageEnter 0.45s ease;
+}

@@ -1,0 +1,154 @@
+/* makes the whole page background match the dark theme,
+   not just the card itself */
+.addtask-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 21px;
+  min-height: 100vh;        /* fills the full screen height */
+  background-color: #000000; /* dark background for the whole page */
+  box-sizing: border-box;
+  font-family:'Times New Roman', Times, serif 
+}
+
+.addtask-wrapper h1 {
+  color: #ffffff;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.addtask-wrapper form {
+  background-color: #1e1e1e;
+  border: 1px solid #2e2e2e;
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 26px;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  background-color: #2a2a2a;
+  border: 1.5px solid #3a3a3a;
+  border-radius: 10px;
+  padding: 16px 14px 8px;
+  color: #ffffff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #61dafb;
+  box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.15);
+}
+
+.input-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  color: #888;
+  font-size: 15px;
+  pointer-events: none;
+  transition: all 0.18s ease;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group textarea:focus + label,
+.input-group textarea:not(:placeholder-shown) + label {
+  top: -9px;
+  left: 10px;
+  font-size: 12px;
+  color: #61dafb;
+  background-color: #1e1e1e;
+  padding: 0 6px;
+}
+
+.priority-group {
+  margin-bottom: 30px;
+}
+
+.priority-label {
+  display: block;
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.priority-options {
+  display: flex;
+  gap: 10px;
+}
+
+.priority-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 8px;
+  border: 1.5px solid #3a3a3a;
+  background-color: #2a2a2a;
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.priority-btn:hover {
+  border-color: #61dafb;
+}
+
+.priority-btn.active.low {
+  background-color: #1f4d2e;
+  border-color: #3ecf6a;
+  color: #3ecf6a;
+}
+
+.priority-btn.active.medium {
+  background-color: #4d3f1f;
+  border-color: #f5b942;
+  color: #f5b942;
+}
+
+.priority-btn.active.high {
+  background-color: #4d1f1f;
+  border-color: #f5424a;
+  color: #f5424a;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px 0;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 10px;
+  color: #121212;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.submit-btn:hover {
+  background-color: #4fc3e8;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}

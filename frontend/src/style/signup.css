@@ -1,0 +1,94 @@
+.signup-wrapper {
+    width: 100%;
+    max-width: 460px;
+    margin: 40px auto;
+    padding: 0 16px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.signup-wrapper h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 24px;
+}
+
+.signup-form {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 36px 40px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.signup-form .input-group {
+    position: relative;
+    margin-bottom: 26px;
+}
+
+.signup-form .input-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.signup-form .input-group input:focus {
+    border-color: #61dafb;
+    box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.15);
+}
+
+.signup-form .input-group label {
+    position: absolute;
+    left: 12px;
+    top: 14px;
+    padding: 0 6px;
+    color: #888;
+    font-size: 15px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.signup-form .input-group input:focus + label,
+.signup-form .input-group input:not(:placeholder-shown) + label {
+    top: -9px;
+    font-size: 12px;
+    color: #61dafb;
+    background-color: #1e1e1e;
+}
+
+.signup-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #61dafb;
+    color: #111111;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.signup-btn:hover {
+    background-color: #82e4ff;
+}
+
+.signup-btn:active {
+    transform: scale(0.98);
+}
+.login{
+    display: inline-block; /* Allows vertical margins to work */
+  margin-top: 10px; 
+  color: #ffffff;
+}

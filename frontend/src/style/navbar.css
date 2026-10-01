@@ -1,0 +1,44 @@
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  background-color: #242424;
+  padding: 15px 40px;
+  color: #ffffff;
+}
+
+.Logo {
+  grid-column: 2;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  font-family: fantasy;
+}
+
+.Nav-links {
+  grid-column: 3;
+  justify-self: end;
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.Nav-links li {
+  display: inline-block;
+}
+
+.Nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  font-family: 'Segoe UI', sans-serif;
+  transition: color 0.2s ease;
+}
+
+.Nav-links a:hover {
+  color: #61dafb;
+}
