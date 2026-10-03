@@ -211,9 +211,6 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// CRUCIAL FOR VERCEL DEPLOYMENT:
-export default app;
-
 
 
 // command to test post req
