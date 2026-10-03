@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../style/navbar.css'
 import { Link, useNavigate } from 'react-router-dom'
+import todoIcon from '../assets/todo-icon.png'
 
 function Navbar(){
   const [login, setLogin] = useState(sessionStorage.getItem('login'))
@@ -25,7 +26,10 @@ function Navbar(){
 
     return (
       <nav className='navbar'>
-        <div className='Logo'>TO-DO APP</div>
+        <Link to='/' className='Logo' aria-label='MY-TODOS home'>
+          <img src={todoIcon} alt="" className="Logo-icon" />
+          <span>MY-TODOS</span>
+        </Link>
         <ul className='Nav-links'>
           {
             login ?

@@ -1,26 +1,36 @@
 .navbar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   background-color: #242424;
-  padding: 15px 40px;
+  min-height: 72px;
+  padding: 0 40px;
   color: #ffffff;
 }
 
 .Logo {
-  grid-column: 2;
-  font-size: 24px;
-  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   color: #ffffff;
-  text-align: center;
-  font-family: fantasy;
+  font-size: 22px;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.Logo-icon {
+  display: block;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .Nav-links {
-  grid-column: 3;
-  justify-self: end;
   list-style: none;
   display: flex;
+  align-items: center;
   gap: 30px;
   margin: 0;
   padding: 0;
@@ -41,4 +51,28 @@
 
 .Nav-links a:hover {
   color: #61dafb;
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .Logo {
+    gap: 8px;
+    font-size: 18px;
+  }
+
+  .Logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .Nav-links {
+    gap: 14px;
+  }
+
+  .Nav-links a {
+    font-size: 14px;
+  }
 }
