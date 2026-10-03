@@ -205,8 +205,15 @@ function verifyToken(req, resp, next) {
     })
 }
 
+//port
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
-app.listen(8000)
+// CRUCIAL FOR VERCEL DEPLOYMENT:
+module.exports = app;
+
 
 
 // command to test post req
