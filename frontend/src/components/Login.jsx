@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { authenticatedFetch } from '../utils/api'; // This utility attaches your live backend URL
 
 export default function Login() {
 
     const [userdata, setUserData] = useState({})
     const navigate = useNavigate();
 
-useEffect(() => {
-    if (sessionStorage.getItem('token')) {
-        navigate('/')
-    }
-}, [navigate])
+    useEffect(() => {
+        if (sessionStorage.getItem('token')) {
+            navigate('/')
+        }
+    }, [navigate])
 
     const handlelogin = async (e) => {
         e.preventDefault()          // stops the page reload
 
-        let result = await fetch('/login', {
+        // CHANGED: Swapped native fetch() with your custom authenticatedFetch() utility
+        let result = await authenticatedFetch('/login', {
             method: 'POST',
             body: JSON.stringify({ ...userdata }),
             headers: {
@@ -34,7 +36,6 @@ useEffect(() => {
             alert("Invalid Credentials")
         }
     }
-
 
     return (
         <div className="signup-wrapper">
@@ -55,8 +56,8 @@ useEffect(() => {
                     <label>Enter your Password</label>
                 </div>
 
-                <button onClick = {handlelogin}type="submit" className="signup-btn">Login</button>
-                <Link className = "login"to="/signup">Dont have an account? Sign up</Link>
+                <button onClick={handlelogin} type="submit" className="signup-btn">Login</button>
+                <Link className="login" to="/signup">Dont have an account? Sign up</Link>
             </form>
         </div>
     )

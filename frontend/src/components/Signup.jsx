@@ -1,6 +1,7 @@
-import { useEffect , useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../style/signup.css'
-import { Link , useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { authenticatedFetch } from '../utils/api'; // Import your custom utility
 
 export default function Signup() {
 
@@ -8,15 +9,16 @@ export default function Signup() {
     const navigate = useNavigate();
 
     useEffect(() => {
-    if (sessionStorage.getItem('token')) {
-        navigate('/')
-    }
-}, [navigate])
+        if (sessionStorage.getItem('token')) {
+            navigate('/')
+        }
+    }, [navigate])
 
     const handleSignup = async (e) => {
         e.preventDefault()          // stops the page reload
 
-        let result = await fetch('/signup', {
+        // CHANGED: Swapped native fetch() with your custom authenticatedFetch() utility
+        let result = await authenticatedFetch('/signup', {
             method: 'POST',
             body: JSON.stringify({ ...userdata }),
             headers: {
@@ -61,7 +63,7 @@ export default function Signup() {
                     <label>Enter your Password</label>
                 </div>
 
-                <button onClick = {handleSignup}type="submit" className="signup-btn">Sign Up</button>
+                <button onClick={handleSignup} type="submit" className="signup-btn">Sign Up</button>
                 <Link className="login" to="/login">Go to login</Link>
             </form>
         </div>
