@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: 'https://sturdy-happiness-xrwjvrqp755j36jgx-5173.app.github.dev', // allow requests from this origin
+    origin: true,  // allow requests from this origin
     credentials: true // allow credentials (cookies) to be sent
 }));
 
