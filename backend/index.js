@@ -212,7 +212,7 @@ app.listen(PORT, () => {
 });
 
 // CRUCIAL FOR VERCEL DEPLOYMENT:
-module.exports = app;
+export default app;
 
 
 
