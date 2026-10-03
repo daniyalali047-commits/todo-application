@@ -3,6 +3,10 @@
     {
       "source": "/(add-task|tasks|delete-task|update-task|signup|login)",
       "destination": "https://vercel.app"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
