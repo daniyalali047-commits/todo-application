@@ -236,7 +236,7 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-
+export default app
 
 // command to test post req
 //curl -i -X delete http://localhost:8000/update/6aba87970d2f7e9911597cbc -H "Content-Type: application/json" -d '{"title":"test task","description":"testing"}'
