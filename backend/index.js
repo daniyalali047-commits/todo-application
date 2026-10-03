@@ -8,7 +8,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors({
-    origin: true,  // allow requests from this origin
+    origin: ' https://todo-application-frontend-theta.vercel.app',
     credentials: true // allow credentials (cookies) to be sent
 }));
 
