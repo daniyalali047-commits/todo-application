@@ -8,10 +8,10 @@ export default function Signup() {
     const navigate = useNavigate();
 
     useEffect(() => {
-    if (localStorage.getItem('login')) {
+    if (sessionStorage.getItem('token')) {
         navigate('/')
     }
-}, [])
+}, [navigate])
 
     const handleSignup = async (e) => {
         e.preventDefault()          // stops the page reload
@@ -27,9 +27,9 @@ export default function Signup() {
         result = await result.json()
         console.log(result)
         if (result.success && result.token) {
-            document.cookie = `token=${result.token}; Path=/`
-            localStorage.setItem('login', userdata.email || userdata.name)
-            window.dispatchEvent(new Event('storage'))
+            sessionStorage.setItem('token', result.token)
+            sessionStorage.setItem('login', userdata.email || userdata.name)
+            window.dispatchEvent(new Event('auth-change'))
             navigate('/')
         } else {
             alert("Invalid Credentials")

@@ -3,11 +3,11 @@ import '../style/navbar.css'
 import { Link, useNavigate } from 'react-router-dom'
 
 function Navbar(){
-  const [login, setLogin] = useState(localStorage.getItem('login'))
+  const [login, setLogin] = useState(sessionStorage.getItem('login'))
   const navigate = useNavigate()
   const logout = () => {
-    localStorage.removeItem('login')
-    document.cookie = 'token=; Max-Age=0; Path=/'
+    sessionStorage.removeItem('login')
+    sessionStorage.removeItem('token')
     setLogin(null)
     setTimeout(() => {
       navigate('/login')
@@ -15,11 +15,11 @@ function Navbar(){
   }
   useEffect(() => {
     const handleStorageChange = () => {
-      setLogin(localStorage.getItem('login'))
+      setLogin(sessionStorage.getItem('login'))
     }
-    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('auth-change', handleStorageChange)
     return () => {
-      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('auth-change', handleStorageChange)
     }
   }, [])
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
+import { authenticatedFetch } from '../utils/api'
 
 export default function Protected({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(null)
@@ -8,11 +9,12 @@ export default function Protected({ children }) {
     useEffect(() => {
         let isActive = true
 
-        fetch('/auth', { credentials: 'include' })
+        authenticatedFetch('/auth')
             .then((response) => {
                 if (response.status === 401) {
-                    localStorage.removeItem('login')
-                    window.dispatchEvent(new Event('storage'))
+                    sessionStorage.removeItem('login')
+                    sessionStorage.removeItem('token')
+                    window.dispatchEvent(new Event('auth-change'))
                     if (isActive) setIsAuthenticated(false)
                     return
                 }
@@ -44,7 +46,7 @@ export default function Protected({ children }) {
     }
 
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace />
+        return <Navigate to="/signup" replace />
     }
 
     return children

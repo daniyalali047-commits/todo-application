@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import '../style/addtask.css'
+import { authenticatedFetch } from '../utils/api'
 
 export default function UpdateTask() {
     const [taskData, setTaskData] = useState({ title: '', description: '' })
@@ -8,13 +9,9 @@ export default function UpdateTask() {
     const navigate = useNavigate()
     const { id } = useParams()
 
-    useEffect(() => {
-        gettask(id)
-    }, [id])
-
-    const gettask = async (taskId) => {
+    const gettask = useCallback(async (taskId) => {
         try {
-            let res = await fetch('/tasks/' + taskId)
+            let res = await authenticatedFetch('/tasks/' + taskId)
             let data = await res.json()
             if (data.result) {
                 setTaskData(data.result)
@@ -25,7 +22,11 @@ export default function UpdateTask() {
         } catch (error) {
             console.error('Error fetching task:', error)
         }
-    }
+    }, [])
+
+    useEffect(() => {
+        gettask(id)
+    }, [gettask, id])
 
     const updatetask = async (e) => {
         e.preventDefault() // Prevents page reload on submit
@@ -36,7 +37,7 @@ export default function UpdateTask() {
         }
 
         console.log("Updating task payload:", payload)
-        let task  = await fetch('/update-task' , {
+        let task  = await authenticatedFetch('/update-task' , {
             method:"PUT",
             body:JSON.stringify(payload),
             headers:{

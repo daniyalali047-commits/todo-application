@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom' // added: this was missing, causing "useNavigate is not defined"
 import '../style/addtask.css'
+import { authenticatedFetch } from '../utils/api'
 
 export default function Addtask() {
     const [taskData, setTaskData] = useState()
@@ -10,7 +11,7 @@ export default function Addtask() {
         event.preventDefault()
         console.log(taskData, priority);
 
-        let result = await fetch('/add-task', {
+        let result = await authenticatedFetch('/add-task', {
             method: "POST",
             body: JSON.stringify({ ...taskData, priority }),
             headers: {

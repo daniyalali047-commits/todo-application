@@ -1,29 +1,28 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import '../style/list.css'
+import { authenticatedFetch } from '../utils/api'
 
 export default function List() {
     const [taskData, setTaskData] = useState()
 
-    useEffect(() => {
-        getListData()
-    }, [])
-
-    const getListData = async () => {
-        let datalist = await fetch('/tasks' , {
-            credentials: 'include', // include cookies in the request
-        })
+    const getListData = useCallback(async () => {
+        let datalist = await authenticatedFetch('/tasks')
         datalist = await datalist.json()
 
         if (datalist.success) {
             setTaskData(datalist.result)
         }
         console.log(datalist);
-    }
+    }, [])
+
+    useEffect(() => {
+        getListData()
+    }, [getListData])
 
     // sends a DELETE request for the given task id, then refreshes the list
     const handleDelete = async (id) => {
-        let result = await fetch(`/delete-task/${id}`, {
+        let result = await authenticatedFetch(`/delete-task/${id}`, {
             method: "DELETE"
         })
         result = await result.json()

@@ -7,10 +7,10 @@ export default function Login() {
     const navigate = useNavigate();
 
 useEffect(() => {
-    if (localStorage.getItem('login')) {
+    if (sessionStorage.getItem('token')) {
         navigate('/')
     }
-}, [])
+}, [navigate])
 
     const handlelogin = async (e) => {
         e.preventDefault()          // stops the page reload
@@ -26,9 +26,9 @@ useEffect(() => {
         result = await result.json()
         console.log(result)
         if (result.success && result.token) {
-            document.cookie = `token=${result.token}; Path=/`
-            localStorage.setItem('login', userdata.email || userdata.name)
-            window.dispatchEvent(new Event('storage')); // Notify other tabs about the login change
+            sessionStorage.setItem('token', result.token)
+            sessionStorage.setItem('login', userdata.email || userdata.name)
+            window.dispatchEvent(new Event('auth-change'))
             navigate('/')
         } else {
             alert("Invalid Credentials")

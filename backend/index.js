@@ -1,14 +1,12 @@
-import { Long, ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import cors from 'cors'
 import express from 'express'
 import { collectionName, connection } from './dbconfig.js'
 import jwt from 'jsonwebtoken'
-import cookieParser from 'cookie-parser'
 const app = express()
 
 
 app.use(express.json())
-app.use(cookieParser())
 app.use(cors({
     origin: true,  // allow requests from this origin
     credentials: true // allow credentials (cookies) to be sent
@@ -18,7 +16,10 @@ app.use(cors({
 app.post("/add-task", verifyToken ,  async (req, resp) => {
     const db = await connection()
     const collection = await db.collection(collectionName)
-    const result = await collection.insertOne(req.body)
+    const result = await collection.insertOne({
+        ...req.body,
+        ownerEmail: req.user.email
+    })
     if (result) {
         resp.send({
             message: "New Task Added",
@@ -41,7 +42,7 @@ app.get("/tasks", verifyToken, async (req, resp) => {
 
 
     const collection = await db.collection(collectionName)
-    const result = await collection.find().toArray()
+    const result = await collection.find({ ownerEmail: req.user.email }).toArray()
     if (result) {
         resp.send({
             message: "Task-list fetch",
@@ -66,10 +67,10 @@ app.put("/update-task", verifyToken, async (req, resp) => {
     const db = await connection()
     const collection = db.collection(collectionName)
 
-    const { _id, ...fields } = req.body
+    const { _id, ownerEmail, ...fields } = req.body
 
     const updatedTask = await collection.findOneAndUpdate(
-        { _id: new ObjectId(_id) },
+        { _id: new ObjectId(_id), ownerEmail: req.user.email },
         { $set: fields },
         { returnDocument: 'after' } // Returns the document AFTER updates are applied
     )
@@ -92,7 +93,10 @@ app.get("/tasks/:id", verifyToken, async (req, resp) => {
     const db = await connection()
     const collection = await db.collection(collectionName)
     const id = req.params.id
-    const result = await collection.findOne({ _id: new ObjectId(id) })
+    const result = await collection.findOne({
+        _id: new ObjectId(id),
+        ownerEmail: req.user.email
+    })
     if (result) {
         resp.send({
             message: "Task-list fetch",
@@ -117,7 +121,10 @@ app.delete("/delete-task/:id", verifyToken ,  async (req, resp) => {
 
     // req.params.id comes from the URL (e.g. /delete-task/6ab7e5dca042f1602e946b14)
     // must convert it to Mongo's ObjectId type before querying, since it's stored as ObjectId
-    const result = await collection.deleteOne({ _id: new ObjectId(req.params.id) })
+    const result = await collection.deleteOne({
+        _id: new ObjectId(req.params.id),
+        ownerEmail: req.user.email
+    })
 
     if (result.deletedCount > 0) {
         resp.send({
@@ -140,13 +147,15 @@ app.post("/signup",   async (req, resp) => {
         const collection = await db.collection('usersdata')
         const result = await collection.insertOne(userdata)
         if (result) {
-            jwt.sign(userdata, 'google', { expiresIn: "5d" }, (error, token) => {
-                resp.send({
-                    success: true,
-                    message: "SignUp Done",
-                    token
-                })
-
+            const token = jwt.sign(
+                { email: userdata.email, name: userdata.name },
+                'google',
+                { expiresIn: "5d" }
+            )
+            resp.send({
+                success: true,
+                message: "SignUp Done",
+                token
             })
         }
     } else {
@@ -166,13 +175,15 @@ app.post("/login",   async (req, resp) => {
         const collection = await db.collection('usersdata')
         const result = await collection.findOne({ email: userdata.email, password: userdata.password })
         if (result) {
-            jwt.sign({ email: result.email, name: result.name }, 'google', { expiresIn: "5d" }, (error, token) => {
-                resp.send({
-                    success: true,
-                    message: "Login Done",
-                    token
-                })
-
+            const token = jwt.sign(
+                { email: result.email, name: result.name },
+                'google',
+                { expiresIn: "5d" }
+            )
+            resp.send({
+                success: true,
+                message: "Login Done",
+                token
             })
 
         } else {
@@ -194,8 +205,15 @@ app.post("/login",   async (req, resp) => {
 
 //function to verify token on each route
 function verifyToken(req, resp, next) {
-    // console.log("verifyToken" , req.cookies);
-    const token = req.cookies?.token;
+    const authorization = req.get('authorization')
+    const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1]
+    if (!token) {
+        return resp.status(401).json({
+            success: false,
+            message: "Authentication required",
+        })
+    }
+
     jwt.verify(token, 'google', (error, decoded) => {
         if(error){
             return resp.status(401).json({
@@ -203,8 +221,8 @@ function verifyToken(req, resp, next) {
                 message: "Authentication required",
             })
         }
+        req.user = decoded
         next();
-        // console.log(decoded);
     })
 }
 
