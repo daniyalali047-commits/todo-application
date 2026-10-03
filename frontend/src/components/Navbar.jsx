@@ -7,10 +7,11 @@ function Navbar(){
   const navigate = useNavigate()
   const logout = () => {
     localStorage.removeItem('login')
+    document.cookie = 'token=; Max-Age=0; Path=/'
     setLogin(null)
-setTimeout(() => {
+    setTimeout(() => {
       navigate('/login')
-}, 0);
+    }, 0)
   }
   useEffect(() => {
     const handleStorageChange = () => {

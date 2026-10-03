@@ -198,12 +198,19 @@ function verifyToken(req, resp, next) {
     const token = req.cookies?.token;
     jwt.verify(token, 'google', (error, decoded) => {
         if(error){
-            return resp.send("Invalid token")
+            return resp.status(401).json({
+                success: false,
+                message: "Authentication required",
+            })
         }
         next();
         // console.log(decoded);
     })
 }
+
+app.get("/auth", verifyToken, (_req, resp) => {
+    resp.json({ success: true })
+})
 
 //port
 const PORT = process.env.PORT || 8000;

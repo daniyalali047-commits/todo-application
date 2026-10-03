@@ -37,12 +37,13 @@ The Vite development server proxies the frontend's API requests to the backend o
 
 ## Authentication and API
 
-The backend issues JWTs at signup or login and checks the token cookie on task API routes. Signup and login are public; task routes require a valid token.
+The backend issues JWTs at signup or login and checks the token cookie on protected API routes. Signup and login are public; task routes require a valid token. The frontend checks `/auth` before showing protected pages.
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | `POST` | `/signup` | Create an account |
 | `POST` | `/login` | Log in |
+| `GET` | `/auth` | Check whether the current token is valid |
 | `POST` | `/add-task` | Create a task |
 | `GET` | `/tasks` | List tasks |
 | `GET` | `/tasks/:id` | Get one task |

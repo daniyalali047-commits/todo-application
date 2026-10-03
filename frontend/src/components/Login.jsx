@@ -26,7 +26,7 @@ useEffect(() => {
         result = await result.json()
         console.log(result)
         if (result.success && result.token) {
-            document.cookie = "token=" + result.token
+            document.cookie = `token=${result.token}; Path=/`
             localStorage.setItem('login', userdata.email || userdata.name)
             window.dispatchEvent(new Event('storage')); // Notify other tabs about the login change
             navigate('/')

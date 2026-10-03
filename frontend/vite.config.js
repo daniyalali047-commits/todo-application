@@ -13,6 +13,7 @@ export default defineConfig({
       '/tasks': 'http://localhost:8000',
       '/delete-task': 'http://localhost:8000',   
 '/update-task': 'http://localhost:8000',
+'/auth': 'http://localhost:8000',
    '/signup': {
      target: 'http://localhost:8000',
      bypass: (req) => (req.method === 'GET' ? '/index.html' : undefined)
